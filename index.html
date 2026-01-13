@@ -534,51 +534,66 @@
             setTimeout(() => { document.getElementById('intro-screen').style.display = 'none'; }, 2500);
         });
 
-        // --- SISTEMA DE LIKES Y VISITAS (API GRATUITA countapi.xyz) ---
-        // Nota: Al usar GitHub Pages (estático), usamos una API pública para guardar los datos.
+        // --- SISTEMA DE LIKES Y VISITAS (NUEVA API: counterapi.dev) ---
         
-        const namespace = 'imperial-legion-site-mx'; // Identificador único de tu web
-        const keyVisits = 'visits';
-        const keyLikes = 'likes';
+        // Usamos un nombre único para que no se mezcle con otros sitios
+        const namespace = 'imperial-legion-mx-legal'; 
+        const keyVisits = 'visitas_totales';
+        const keyLikes = 'likes_totales';
 
-        // 1. Registrar Visita y Mostrar
-        fetch(`https://api.countapi.xyz/hit/${namespace}/${keyVisits}`)
-            .then(res => res.json())
+        // Función auxiliar para manejar la respuesta de la API
+        const handleResponse = (response) => {
+            if (!response.ok) throw new Error('Network response was not ok');
+            return response.json();
+        };
+
+        // 1. VISITAS: Se incrementa automáticamente al cargar (/up)
+        fetch(`https://api.counterapi.dev/v1/${namespace}/${keyVisits}/up`)
+            .then(handleResponse)
             .then(data => {
-                document.getElementById('visit-count').innerText = data.value;
+                document.getElementById('visit-count').innerText = data.count;
             })
             .catch(err => {
-                console.log("Error API Visitas:", err);
-                document.getElementById('visit-count').innerText = "On";
+                console.error("Error Visitas:", err);
+                document.getElementById('visit-count').innerText = "1"; // Fallback visual
             });
 
-        // 2. Obtener Likes Actuales (Sin sumar)
-        fetch(`https://api.countapi.xyz/get/${namespace}/${keyLikes}`)
-            .then(res => res.json())
+        // 2. LIKES (CARGA INICIAL): Solo leemos el valor actual (sin /up)
+        fetch(`https://api.counterapi.dev/v1/${namespace}/${keyLikes}`)
+            .then(handleResponse)
             .then(data => {
-                document.getElementById('like-count').innerText = data.value || 0;
+                document.getElementById('like-count').innerText = data.count;
             })
-            .catch(() => {
-                // Si la llave no existe aún, intentamos crearla con el primer click
+            .catch(err => {
+                // Si es la primera vez que se crea, puede dar error 404, mostramos 0
+                console.log("Aun no hay likes o error:", err);
                 document.getElementById('like-count').innerText = "0";
             });
 
-        // 3. Función Dar Like
+        // 3. LIKES (AL DAR CLIC): Incrementamos (/up)
         function giveLike() {
-            // Evitar spam simple revisando localStorage
-            if(localStorage.getItem('liked_imperial') === 'true') {
-                alert("Ya has dado like a la Legión Imperial.");
+            // Protección simple para no spamear clicks infinitos en la misma sesión
+            if(sessionStorage.getItem('voted_imperial')) {
+                alert("Ya has dado tu voto de confianza hoy.");
                 return;
             }
 
-            fetch(`https://api.countapi.xyz/hit/${namespace}/${keyLikes}`)
-                .then(res => res.json())
+            // Animación visual inmediata (para que se sienta rápido)
+            const icon = document.getElementById('like-icon');
+            const countSpan = document.getElementById('like-count');
+            icon.classList.add('liked');
+
+            // Llamada a la API
+            fetch(`https://api.counterapi.dev/v1/${namespace}/${keyLikes}/up`)
+                .then(handleResponse)
                 .then(data => {
-                    document.getElementById('like-count').innerText = data.value;
-                    document.getElementById('like-icon').classList.add('liked');
-                    localStorage.setItem('liked_imperial', 'true'); // Guardar que este usuario ya votó
+                    countSpan.innerText = data.count;
+                    sessionStorage.setItem('voted_imperial', 'true'); // Bloqueamos más votos en esta sesión
                 })
-                .catch(err => console.log("Error dando like", err));
+                .catch(err => {
+                    console.error("Error dando like:", err);
+                    alert("Error de conexión al registrar el like.");
+                });
         }
 
 
@@ -699,3 +714,4 @@
     </script>
 </body>
 </html>
+
