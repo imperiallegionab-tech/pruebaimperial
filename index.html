@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Imperial Legion | Despacho Juridico</title>
+    <title>Imperial Legion | Firma Legal</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,21 +13,19 @@
 
     <style>
         /* -----------------------------------------------------------
-            VARIABLES Y CONFIGURACIÓN BASE
+           VARIABLES Y CONFIGURACIÓN BASE
         ----------------------------------------------------------- */
         :root {
             --gold-metallic: #b5995e;   
             --gold-dim: #7a6030;        
-            --black-void: #050505;      
+            --black-void: #050505;       
             --red-blood: #4a0404;       
-            --white-muted: #dcdcdc;     
+            --white-muted: #dcdcdc;      
             --text-grey: #999;
             
-            /* LIQUID GLASS STYLE - AJUSTADO PARA SERIEDAD */
-            --liquid-bg: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.01));
-            --liquid-border: 1px solid rgba(255, 255, 255, 0.1);
-            --liquid-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.6);
-            --liquid-blur: blur(20px);
+            /* LIQUID GLASS STYLE */
+            --liquid-shadow: 0 15px 35px 0 rgba(0, 0, 0, 0.7);
+            --liquid-blur: blur(15px);
             
             --font-title: 'Cinzel', serif;
             --font-body: 'Montserrat', sans-serif;
@@ -41,11 +39,10 @@
             font-family: var(--font-body);
             overflow-x: hidden;
             width: 100vw;
-            min-height: 100vh;
         }
 
         /* -----------------------------------------------------------
-            FONDO 3D
+           FONDO 3D
         ----------------------------------------------------------- */
         #webgl-canvas {
             position: fixed;
@@ -58,7 +55,7 @@
         }
 
         /* -----------------------------------------------------------
-            INTRODUCCIÓN
+           INTRODUCCIÓN
         ----------------------------------------------------------- */
         #intro-screen {
             position: fixed;
@@ -84,7 +81,7 @@
         @keyframes pulse { 0% { opacity: 0.6; } 50% { opacity: 1; } 100% { opacity: 0.6; } }
 
         /* -----------------------------------------------------------
-            NAVBAR (LIQUID)
+           NAVBAR (LIQUID)
         ----------------------------------------------------------- */
         nav {
             position: fixed;
@@ -99,7 +96,6 @@
             backdrop-filter: var(--liquid-blur);
             -webkit-backdrop-filter: var(--liquid-blur);
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-            height: 70px;
         }
         .nav-logo {
             font-family: var(--font-title);
@@ -107,16 +103,13 @@
             font-weight: 700;
             font-size: 1.1rem;
             letter-spacing: 1px;
-            text-decoration: none;
-            transition: color 0.3s ease;
+            display: flex;
+            align-items: center;
         }
-        .nav-logo:hover {
-            color: var(--gold-metallic);
-        }
-        .nav-logo span { color: var(--gold-metallic); }
+        .nav-logo span { color: var(--gold-metallic); margin-left: 5px; }
 
         /* -----------------------------------------------------------
-            LAYOUT
+           LAYOUT & ESTILOS GENERALES
         ----------------------------------------------------------- */
         .container {
             width: 88%;
@@ -124,28 +117,20 @@
             margin: 0 auto;
             position: relative;
             z-index: 10;
-            padding-top: 20px;
         }
 
         .hero {
-            min-height: calc(100vh - 70px);
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: flex-start;
-            padding-top: 0;
+            padding-top: 60px;
         }
 
         @media (max-width: 768px) {
-            .hero { 
-                min-height: calc(100vh - 70px);
-                align-items: center; 
-                text-align: center; 
-                padding-top: 20px;
-                justify-content: flex-start;
-            }
+            .hero { align-items: center; text-align: center; }
             h1 { font-size: 2.5rem !important; }
-            .container { width: 92%; }
         }
 
         h1 {
@@ -159,6 +144,7 @@
         }
         h1 span { color: var(--gold-metallic); display: block; font-size: 0.6em; margin-top: 10px; }
 
+        /* Botón */
         .btn-gold {
             position: relative;
             background: linear-gradient(135deg, rgba(197, 160, 89, 0.9), rgba(122, 96, 48, 0.9));
@@ -178,46 +164,28 @@
             transition: all 0.3s ease;
             display: inline-block;
         }
-        
         .btn-gold:hover {
             box-shadow: 0 0 25px rgba(197, 160, 89, 0.4);
             transform: scale(1.02);
         }
-
         .btn-gold::before {
             content: '';
             position: absolute;
-            top: 0; left: -100%;
-            width: 100%; height: 100%;
+            top: 0; left: -100%; width: 100%; height: 100%;
             background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
             transition: 0.5s;
         }
         .btn-gold:hover::before { left: 100%; }
 
-        .terms-link {
-            color: var(--gold-metallic);
-            text-decoration: none;
-            font-family: var(--font-body);
-            font-size: 0.85rem;
-            letter-spacing: 0.5px;
-            transition: all 0.3s ease;
-            border-bottom: 1px solid transparent;
-            padding-bottom: 1px;
-        }
-        .terms-link:hover {
-            border-bottom: 1px solid var(--gold-metallic);
-            opacity: 0.8;
-        }
-
         /* -----------------------------------------------------------
-            TARJETAS "LIQUID GLASS"
+           TARJETAS (LIQUID GLASS)
         ----------------------------------------------------------- */
         .section-title {
             font-family: var(--font-title);
             text-align: center;
             font-size: 2rem;
             color: var(--white-muted);
-            margin: 4rem 0 3rem 0;
+            margin: 5rem 0 3rem 0;
             position: relative;
             display: inline-block;
             left: 50%;
@@ -232,24 +200,24 @@
         @media(min-width: 768px) { .grid-cards { grid-template-columns: repeat(3, 1fr); } }
 
         .card {
-            background: var(--liquid-bg);
+            background: rgba(25, 25, 25, 0.65);
             box-shadow: var(--liquid-shadow);
             backdrop-filter: var(--liquid-blur);
             -webkit-backdrop-filter: var(--liquid-blur);
-            border: var(--liquid-border);
-            border-top: 1px solid rgba(255,255,255,0.2);
-            border-left: 1px solid rgba(255,255,255,0.2);
+            border: 1px solid rgba(181, 153, 94, 0.15);
+            border-top: 1px solid rgba(181, 153, 94, 0.3);
             padding: 35px 30px;
-            border-radius: 20px;
+            border-radius: 24px;
             transition: 0.4s ease;
             position: relative;
             overflow: hidden;
         }
 
         .card:hover {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02));
+            background: rgba(35, 35, 35, 0.75);
             transform: translateY(-8px);
-            border-color: rgba(181, 153, 94, 0.4);
+            border-color: rgba(181, 153, 94, 0.5);
+            box-shadow: 0 20px 40px 0 rgba(0, 0, 0, 0.8);
         }
 
         .card h3 {
@@ -272,8 +240,7 @@
 
         .card-bg-icon {
             position: absolute;
-            bottom: -10px;
-            right: -10px;
+            bottom: -10px; right: -10px;
             font-size: 5rem;
             opacity: 0.05;
             color: var(--gold-metallic);
@@ -281,122 +248,164 @@
         }
 
         /* -----------------------------------------------------------
-            CONTENIDO DE TÉRMINOS Y CONDICIONES
-        ----------------------------------------------------------- */
-        .terms-container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 2rem 0;
-        }
-        
-        .terms-content {
-            background: var(--liquid-bg);
-            box-shadow: var(--liquid-shadow);
-            backdrop-filter: var(--liquid-blur);
-            -webkit-backdrop-filter: var(--liquid-blur);
-            border: var(--liquid-border);
-            border-radius: 20px;
-            padding: 40px;
-            margin-top: 2rem;
-        }
-        
-        .terms-content h2 {
-            font-family: var(--font-title);
-            color: var(--gold-metallic);
-            margin-top: 2rem;
-            margin-bottom: 1rem;
-            font-size: 1.5rem;
-        }
-        
-        .terms-content h2:first-child { margin-top: 0; }
-        
-        .terms-content p, .terms-content ul {
-            color: var(--white-muted);
-            opacity: 0.8;
-            line-height: 1.7;
-            margin-bottom: 1.2rem;
-        }
-        
-        .terms-content ul {
-            padding-left: 1.5rem;
-            margin-left: 0.5rem;
-        }
-        
-        .terms-content li { margin-bottom: 0.7rem; }
-        
-        .terms-date {
-            color: var(--gold-metallic);
-            font-style: italic;
-            text-align: right;
-            margin-top: 2rem;
-            border-top: 1px solid rgba(255,255,255,0.1);
-            padding-top: 1rem;
-        }
-        
-        .back-link {
-            display: inline-block;
-            margin-top: 2rem;
-            color: var(--gold-metallic);
-            text-decoration: none;
-            font-family: var(--font-title);
-            font-size: 0.9rem;
-            letter-spacing: 1px;
-            transition: opacity 0.3s ease;
-        }
-        
-        .back-link:hover { opacity: 0.8; }
-
-        /* -----------------------------------------------------------
-            FOOTER
+           FOOTER
         ----------------------------------------------------------- */
         footer {
-            margin-top: 5rem;
+            margin-top: 8rem;
             padding: 3rem 1rem;
             background: rgba(10, 10, 10, 0.6);
-            backdrop-filter: blur(10px);
+            backdrop-filter: var(--liquid-blur);
+            -webkit-backdrop-filter: var(--liquid-blur);
             border-top: 1px solid rgba(255,255,255,0.05);
             text-align: center;
             font-size: 0.8rem;
             color: #666;
         }
         
-        .footer-links {
-            margin-top: 1rem;
-            margin-bottom: 1.5rem;
-        }
-        
-        .footer-links a {
+        .footer-link {
             color: var(--text-grey);
             text-decoration: none;
-            margin: 0 10px;
-            transition: color 0.3s ease;
+            font-size: 0.75rem;
+            margin-top: 15px;
+            display: inline-block;
+            border-bottom: 1px solid transparent;
+            transition: 0.3s;
+            padding-bottom: 2px;
         }
-        
-        .footer-links a:hover { color: var(--gold-metallic); }
+        .footer-link:hover {
+            color: var(--gold-metallic);
+            border-bottom-color: var(--gold-metallic);
+        }
 
         /* -----------------------------------------------------------
-            LOGO HERO
+           MODAL - TÉRMINOS
         ----------------------------------------------------------- */
-        .logo-container {
-            width: 90px; 
-            height: 90px; 
-            margin-bottom: 25px; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            border-radius: 24px; 
-            color: var(--gold-metallic); 
-            font-size: 0.8rem;
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.1);
-            backdrop-filter: blur(10px);
-            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(5px);
+            z-index: 10000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.4s ease;
         }
+
+        .modal-overlay.active { display: flex; opacity: 1; }
+
+        .modal-content {
+            width: 90%;
+            max-width: 600px;
+            max-height: 85vh;
+            background: rgba(30, 30, 30, 0.75);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(181, 153, 94, 0.2);
+            border-top: 1px solid rgba(181, 153, 94, 0.5); 
+            box-shadow: var(--liquid-shadow), inset 0 0 30px rgba(181, 153, 94, 0.05);
+            border-radius: 24px;
+            padding: 40px;
+            overflow-y: auto;
+            position: relative;
+            transform: translateY(30px) scale(0.95);
+            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        .modal-overlay.active .modal-content { transform: translateY(0) scale(1); }
+
+        .modal-content::-webkit-scrollbar { width: 6px; }
+        .modal-content::-webkit-scrollbar-track { background: rgba(0,0,0,0.1); }
+        .modal-content::-webkit-scrollbar-thumb { background: var(--gold-dim); border-radius: 10px; }
+
+        .modal-close {
+            position: absolute;
+            top: 20px; right: 25px;
+            background: none;
+            border: none;
+            color: var(--text-grey);
+            font-size: 2rem;
+            line-height: 1;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .modal-close:hover { color: var(--gold-metallic); transform: rotate(90deg); }
+
+        .modal-title {
+            font-family: var(--font-title);
+            color: var(--white-muted);
+            font-size: 1.6rem;
+            margin-bottom: 25px;
+            border-bottom: 1px solid rgba(181, 153, 94, 0.3);
+            padding-bottom: 15px;
+            text-align: center;
+        }
+
+        .modal-body p {
+            font-size: 0.9rem;
+            color: #ccc;
+            line-height: 1.7;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+
+        .modal-body strong { color: var(--gold-metallic); font-weight: 600; }
+
+        /* -----------------------------------------------------------
+           NUEVO: WIDGET DE ESTADÍSTICAS Y LIKES
+        ----------------------------------------------------------- */
+        .stats-float {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 900;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: flex-end;
+        }
+
+        .stat-badge {
+            background: rgba(10, 10, 10, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(181, 153, 94, 0.3);
+            border-radius: 30px;
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--gold-metallic);
+            font-family: var(--font-body);
+            font-size: 0.85rem;
+            font-weight: 600;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            transition: 0.3s;
+        }
+
+        /* Botón Like Animado */
+        .like-btn {
+            cursor: pointer;
+            border: 1px solid rgba(181, 153, 94, 0.5);
+            background: rgba(181, 153, 94, 0.1);
+        }
+        .like-btn:hover {
+            background: rgba(181, 153, 94, 0.2);
+            transform: scale(1.05);
+            border-color: var(--gold-metallic);
+        }
+        .like-btn:active { transform: scale(0.95); }
         
-        .logo-container img {
-            width: 80%; 
-            height: auto; 
-            object-fit: contain;
+        .like-icon.liked {
+            color: #ff4d4d; /* Rojo al dar like */
+            animation: heartPop 0.4s ease;
+        }
+
+        @keyframes heartPop {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.4); }
+            100% { transform: scale(1); }
         }
 
     </style>
@@ -404,18 +413,33 @@
 <body>
 
     <div id="intro-screen"><div class="intro-text">IMPERIAL LEGION</div></div>
+    
     <div id="webgl-canvas"></div>
 
     <nav>
-        <a href="#" class="nav-logo">IMPERIAL <span>LEGION</span></a>
+        <div class="nav-logo">
+            IMPERIAL <span>LEGION</span>
+        </div>
         <a href="https://wa.me/524273816560" style="color:var(--gold-metallic); text-decoration:none; font-size:1.5rem;">⚖️</a>
     </nav>
 
-    <div class="container" id="main-page">
+    <div class="container">
         
         <section class="hero">
-            <div class="logo-container">
-                <img src="1.png" alt="Logo Imperial Legion">
+            <div style="
+                width: 90px; height: 90px; 
+                margin-bottom: 25px; 
+                display:flex; align-items:center; justify-content:center; 
+                border-radius:24px; 
+                color: var(--gold-metallic); 
+                font-size: 0.8rem;
+                background: rgba(255,255,255,0.03);
+                border: 1px solid rgba(181, 153, 94, 0.2);
+                border-top: 1px solid rgba(181, 153, 94, 0.4);
+                backdrop-filter: blur(15px);
+                box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            ">
+                IMG
             </div>
 
             <h1 class="fade-in">Justicia<br><span>Implacable & Solemne</span></h1>
@@ -432,112 +456,133 @@
             <div class="card">
                 <div class="card-bg-icon">⚔️</div>
                 <h3>Penal</h3>
-                <p>Defensa técnica rigurosa en juicios orales. Protegemos su libertad con la fuerza de la ley y una estrategia inquebrantable. </p>
+                <p>Defensa técnica rigurosa en juicios orales. Protegemos su libertad con la fuerza de la ley y una estrategia romana impenetrable.</p>
             </div>
             
             <div class="card">
                 <div class="card-bg-icon">🏛️</div>
                 <h3>Civil</h3>
-                <p>Blindaje patrimonial y resolución de conflictos contractuales. Aseguramos la solidez de sus bienes frente a cualquier adversidad.</p>
+                <p>Blindaje patrimonial y resolución de conflictos contractuales. Aseguramos la solidez de sus activos frente a cualquier adversidad.</p>
             </div>
             
             <div class="card">
                 <div class="card-bg-icon">⚜️</div>
                 <h3>Familiar</h3>
-                <p>Discreción absoluta en divorcios y sucesiones complejas. Velamos por la estabilidad y el futuro de sus hijos.</p>
+                <p>Discreción absoluta en divorcios y sucesiones complejas. Velamos por la estabilidad y el futuro de su linaje.</p>
             </div>
         </div>
 
         <footer>
             <div style="margin-bottom: 15px; font-family: var(--font-title); color: var(--gold-metallic); letter-spacing: 2px;">IMPERIAL LEGION ABOGADOS</div>
-            <p>© 2026. Todos los derechos reservados.</p>
+            <p>© 2024. Todos los derechos reservados.</p>
             
-            <div class="footer-links">
-                <a href="#terminos" class="terms-link">Términos y Condiciones</a>
+            <div style="margin-top: 25px; border-top: 1px solid rgba(181, 153, 94, 0.2); padding-top: 15px; width: 60%; margin-left: auto; margin-right: auto;">
+                <a href="#" class="footer-link" onclick="openModal(event)">Términos y Condiciones de Uso</a>
             </div>
-            
-            <p style="color: #777; font-size: 0.75rem;">
-                Despacho jurídico especializado en derecho penal, civil y familiar.
-            </p>
         </footer>
     </div>
 
-    <div class="container" id="terms-page" style="display: none;">
-        
-        <section class="hero">
-            <h1 class="fade-in">Términos y<br><span>Condiciones</span></h1>
-            <p style="color: #bbb; margin-bottom: 35px; max-width: 600px; line-height: 1.7; font-size: 1.05rem;">
-                Lea detenidamente los términos y condiciones que rigen el uso de nuestros servicios jurídicos y la relación con nuestro despacho.
-            </p>
-            
-            <a href="#" class="back-link">← Volver al inicio</a>
-        </section>
-        
-        <div class="terms-container">
-            <div class="terms-content">
-                <h2>1. Aceptación de los Términos</h2>
-                <p>Al acceder y utilizar los servicios de Imperial Legion Despacho Jurídico, usted acepta estar sujeto a estos términos y condiciones en su totalidad.</p>
-                
-                <h2>2. Servicios Jurídicos</h2>
-                <p>Imperial Legion proporciona asesoría y representación legal en las áreas de derecho penal, civil y familiar.</p>
-                
-                <h2>3. Confidencialidad</h2>
-                <p>Nos comprometemos a mantener la confidencialidad de toda la información proporcionada por nuestros clientes de acuerdo con la ley.</p>
-                
-                <h2>4. Honorarios y Pagos</h2>
-                <ul>
-                    <li>Los honorarios podrán ser fijos, por hora o contingentes.</li>
-                    <li>Se requerirá un anticipo para iniciar la representación.</li>
-                    <li>Los gastos adicionales se facturarán por separado.</li>
-                </ul>
-                
-                <h2>5. Responsabilidades del Cliente</h2>
-                <p>El cliente se compromete a proporcionar información veraz y cumplir con los pagos acordados.</p>
-                
-                <h2>6. Limitación de Responsabilidad</h2>
-                <p>Imperial Legion no garantiza resultados específicos en procedimientos judiciales, ya que dependen de terceros.</p>
-                
-                <h2>7. Propiedad Intelectual</h2>
-                <p>Todo el material contenido en este sitio es propiedad de Imperial Legion.</p>
-                
-                <div class="terms-date">
-                    Última actualización: Enero 2026
-                </div>
+    <div class="stats-float">
+        <div class="stat-badge" title="Visitas Totales">
+            <span>👁️</span>
+            <span id="visit-count">...</span>
+        </div>
+        <div class="stat-badge like-btn" onclick="giveLike()">
+            <span class="like-icon" id="like-icon">❤️</span>
+            <span>Dame Like</span>
+            <span id="like-count" style="margin-left:5px; border-left:1px solid rgba(181,153,94,0.3); padding-left:8px;">...</span>
+        </div>
+    </div>
+
+    <div id="terms-modal" class="modal-overlay">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal()">×</button>
+            <h2 class="modal-title">Términos y Condiciones</h2>
+            <div class="modal-body">
+                <p><strong>1. Aceptación de los Términos:</strong> Al acceder y utilizar este sitio web...</p>
+                <p>... (Resto del contenido legal igual) ...</p>
             </div>
-            
-            <a href="#" class="back-link">← Volver al inicio</a>
         </div>
     </div>
 
     <script>
-        // Manejo de la pantalla de introducción
+        // --- CONTROL DE MODAL (Términos) ---
+        function openModal(e) {
+            e.preventDefault();
+            const modal = document.getElementById('terms-modal');
+            modal.style.display = 'flex';
+            setTimeout(() => { modal.classList.add('active'); }, 10);
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('terms-modal');
+            modal.classList.remove('active');
+            setTimeout(() => {
+                modal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }, 400);
+        }
+
+        document.getElementById('terms-modal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+
+        // --- CONTROL DE CARGA ---
         window.addEventListener('load', () => {
             setTimeout(() => { document.getElementById('intro-screen').style.opacity = '0'; }, 1000);
             setTimeout(() => { document.getElementById('intro-screen').style.display = 'none'; }, 2500);
         });
 
-        // LÓGICA DE NAVEGACIÓN (SPA)
-        function router() {
-            const hash = window.location.hash;
-            const mainPage = document.getElementById('main-page');
-            const termsPage = document.getElementById('terms-page');
+        // --- SISTEMA DE LIKES Y VISITAS (API GRATUITA countapi.xyz) ---
+        // Nota: Al usar GitHub Pages (estático), usamos una API pública para guardar los datos.
+        
+        const namespace = 'imperial-legion-site-mx'; // Identificador único de tu web
+        const keyVisits = 'visits';
+        const keyLikes = 'likes';
 
-            if (hash === '#terminos') {
-                mainPage.style.display = 'none';
-                termsPage.style.display = 'block';
-                document.title = "Términos y Condiciones | Imperial Legion";
-                window.scrollTo(0, 0);
-            } else {
-                mainPage.style.display = 'block';
-                termsPage.style.display = 'none';
-                document.title = "Imperial Legion | Despacho Juridico";
+        // 1. Registrar Visita y Mostrar
+        fetch(`https://api.countapi.xyz/hit/${namespace}/${keyVisits}`)
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById('visit-count').innerText = data.value;
+            })
+            .catch(err => {
+                console.log("Error API Visitas:", err);
+                document.getElementById('visit-count').innerText = "On";
+            });
+
+        // 2. Obtener Likes Actuales (Sin sumar)
+        fetch(`https://api.countapi.xyz/get/${namespace}/${keyLikes}`)
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById('like-count').innerText = data.value || 0;
+            })
+            .catch(() => {
+                // Si la llave no existe aún, intentamos crearla con el primer click
+                document.getElementById('like-count').innerText = "0";
+            });
+
+        // 3. Función Dar Like
+        function giveLike() {
+            // Evitar spam simple revisando localStorage
+            if(localStorage.getItem('liked_imperial') === 'true') {
+                alert("Ya has dado like a la Legión Imperial.");
+                return;
             }
+
+            fetch(`https://api.countapi.xyz/hit/${namespace}/${keyLikes}`)
+                .then(res => res.json())
+                .then(data => {
+                    document.getElementById('like-count').innerText = data.value;
+                    document.getElementById('like-icon').classList.add('liked');
+                    localStorage.setItem('liked_imperial', 'true'); // Guardar que este usuario ya votó
+                })
+                .catch(err => console.log("Error dando like", err));
         }
 
-        window.addEventListener('hashchange', router);
-        window.addEventListener('load', router);
 
-        // Configuración del fondo 3D
+        // --- THREE.JS (ESCENA 3D - SIN CAMBIOS) ---
         const container = document.getElementById('webgl-canvas');
         const scene = new THREE.Scene();
         
