@@ -41,7 +41,7 @@
             width: 100vw;
         }
 
-        /* EFECTO DE RUIDO (FILM GRAIN) */
+        /* EFECTO DE RUIDO (FILM GRAIN) - TEXTURA CINEMATOGRÁFICA */
         .noise-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -266,7 +266,7 @@
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
-        /* El brillo que sigue al mouse */
+        /* El brillo que sigue al mouse (Spotlight) */
         .card::before {
             content: "";
             position: absolute;
@@ -292,7 +292,7 @@
         .card h3, .card p, .card-bg-icon {
             position: relative;
             z-index: 2;
-            pointer-events: none; /* Para que el mouseover detecte la tarjeta, no el texto */
+            pointer-events: none;
         }
 
         .card h3 {
@@ -404,7 +404,7 @@
             color: var(--text-grey);
             font-size: 2rem;
             line-height: 1;
-            cursor: pointer; /* Excepción para el cursor aquí */
+            cursor: pointer;
             transition: 0.3s;
         }
         .modal-close:hover { color: var(--gold-metallic); transform: rotate(90deg); }
@@ -711,10 +711,10 @@
         }
 
 
-        // --- THREE.JS (ESCENA 3D MEJORADA CON PARTÍCULAS E INTERACCIÓN) ---
+        // --- THREE.JS (ESCENA 3D ESTÁTICA - SOLO MOVIMIENTO INTERNO) ---
         const container = document.getElementById('webgl-canvas');
         const scene = new THREE.Scene();
-        // Niebla suave para fundir el fondo
+        // Niebla suave
         scene.fog = new THREE.FogExp2(0x000000, 0.03); 
         
         const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 100);
@@ -804,13 +804,12 @@
         rimLight.position.set(-10, 5, -5);
         scene.add(rimLight);
 
-        // NUEVO: SISTEMA DE PARTÍCULAS (POLVO DE ORO)
+        // SISTEMA DE PARTÍCULAS (Mantenemos esto para ambiente)
         const particlesGeometry = new THREE.BufferGeometry();
         const particlesCount = 350;
         const posArray = new Float32Array(particlesCount * 3);
 
         for(let i = 0; i < particlesCount * 3; i++) {
-            // Posiciones aleatorias en un espacio amplio
             posArray[i] = (Math.random() - 0.5) * 35;
         }
         particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
@@ -846,36 +845,24 @@
             updateLayout();
         });
 
-        // ANIMACIÓN E INTERACCIÓN MOUSE 3D
-        let targetX = 0;
-        let targetY = 0;
-        const windowHalfX = window.innerWidth / 2;
-        const windowHalfY = window.innerHeight / 2;
-
-        document.addEventListener('mousemove', (event) => {
-            targetX = (event.clientX - windowHalfX) * 0.001;
-            targetY = (event.clientY - windowHalfY) * 0.001;
-        });
-
+        // ANIMACIÓN: BALANZA ESTABILIZADA
         const clock = new THREE.Clock();
         
         function animate() {
             requestAnimationFrame(animate);
             const time = clock.getElapsedTime();
 
-            // Movimiento suave de la balanza
+            // Mantenemos solo el balanceo interno original
             scalesGroup.rotation.y = Math.sin(time * 0.2) * 0.15;
             beamGroup.rotation.z = Math.sin(time * 0.8) * 0.1;
             leftPlate.rotation.z = -beamGroup.rotation.z;
             rightPlate.rotation.z = -beamGroup.rotation.z;
 
-            // Animación de partículas
+            // Las partículas siguen rotando suavemente alrededor
             particlesMesh.rotation.y = time * 0.05;
             particlesMesh.rotation.x = time * 0.02;
 
-            // Parallax Interactivo (Movimiento sutil basado en el mouse)
-            mainGroup.rotation.y += (targetX - mainGroup.rotation.y) * 0.05;
-            mainGroup.rotation.x += (targetY - mainGroup.rotation.x) * 0.05;
+            // ELIMINADO: Movimiento de la cámara/grupo según el mouse (Parallax)
 
             renderer.render(scene, camera);
         }
