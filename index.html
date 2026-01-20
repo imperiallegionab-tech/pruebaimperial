@@ -18,9 +18,9 @@
         :root {
             --gold-metallic: #b5995e;   
             --gold-dim: #7a6030;        
-            --black-void: #050505;       
-            --red-blood: #4a0404;       
-            --white-muted: #dcdcdc;      
+            --black-void: #050505;        
+            --red-blood: #4a0404;        
+            --white-muted: #dcdcdc;       
             --text-grey: #999;
             
             /* LIQUID GLASS STYLE */
@@ -31,7 +31,7 @@
             --font-body: 'Montserrat', sans-serif;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * { margin: 0; padding: 0; box-sizing: border-box; cursor: none; /* Ocultamos cursor default */ }
 
         body {
             background-color: var(--black-void);
@@ -39,6 +39,44 @@
             font-family: var(--font-body);
             overflow-x: hidden;
             width: 100vw;
+        }
+
+        /* EFECTO DE RUIDO (FILM GRAIN) */
+        .noise-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 9000;
+            opacity: 0.05;
+            background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MDAiIGhlaWdodD0iNTAwIj48ZmlsdGVyIGlkPSJnoiPjxmZVR1cmJ1bGVuY2UgdHlwZT0iZnJhY3RhbE5vaXNlIiBiYXNlRnJlcXVlbmN5PSIwLjY1IiBudW1PY3RhdmVzPSIzIiBzdGl0Y2hUaWxlcz0ic3RpdGNoIi8+PC9maWx0ZXI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsdGVyPSJ1cmwoI2cpIiBvcGFjaXR5PSIwLjUiLz48L3N2Zz4=');
+        }
+
+        /* -----------------------------------------------------------
+           CURSOR PERSONALIZADO
+        ----------------------------------------------------------- */
+        .cursor-dot, .cursor-circle {
+            position: fixed;
+            top: 0; left: 0;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            z-index: 10000;
+            pointer-events: none;
+        }
+        .cursor-dot {
+            width: 8px; height: 8px;
+            background-color: var(--gold-metallic);
+        }
+        .cursor-circle {
+            width: 40px; height: 40px;
+            border: 1px solid rgba(181, 153, 94, 0.5);
+            transition: width 0.3s, height 0.3s, background-color 0.3s;
+        }
+        /* Estado Hover del cursor */
+        body.hovering .cursor-circle {
+            width: 60px; height: 60px;
+            background-color: rgba(181, 153, 94, 0.1);
+            border-color: var(--gold-metallic);
+            mix-blend-mode: screen;
         }
 
         /* -----------------------------------------------------------
@@ -78,7 +116,7 @@
             font-size: 1.5rem;
             animation: pulse 2s infinite;
         }
-        @keyframes pulse { 0% { opacity: 0.6; } 50% { opacity: 1; } 100% { opacity: 0.6; } }
+        @keyframes pulse { 0% { opacity: 0.6; transform: scale(1); } 50% { opacity: 1; transform: scale(1.05); } 100% { opacity: 0.6; transform: scale(1); } }
 
         /* -----------------------------------------------------------
            NAVBAR (LIQUID)
@@ -96,7 +134,11 @@
             backdrop-filter: var(--liquid-blur);
             -webkit-backdrop-filter: var(--liquid-blur);
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transform: translateY(-100%);
+            animation: slideDown 1s forwards 2.6s;
         }
+        @keyframes slideDown { to { transform: translateY(0); } }
+
         .nav-logo {
             font-family: var(--font-title);
             color: var(--white-muted);
@@ -117,6 +159,17 @@
             margin: 0 auto;
             position: relative;
             z-index: 10;
+        }
+
+        /* ANIMACIONES DE SCROLL (REVEAL) */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
         }
 
         .hero {
@@ -165,20 +218,20 @@
             display: inline-block;
         }
         .btn-gold:hover {
-            box-shadow: 0 0 25px rgba(197, 160, 89, 0.4);
-            transform: scale(1.02);
+            box-shadow: 0 0 25px rgba(197, 160, 89, 0.6);
+            transform: scale(1.05);
         }
         .btn-gold::before {
             content: '';
             position: absolute;
             top: 0; left: -100%; width: 100%; height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent);
             transition: 0.5s;
         }
-        .btn-gold:hover::before { left: 100%; }
+        .btn-gold:hover::before { left: 100%; transition: 0.7s; }
 
         /* -----------------------------------------------------------
-           TARJETAS (LIQUID GLASS)
+           TARJETAS CON EFECTO SPOTLIGHT
         ----------------------------------------------------------- */
         .section-title {
             font-family: var(--font-title);
@@ -208,16 +261,38 @@
             border-top: 1px solid rgba(181, 153, 94, 0.3);
             padding: 35px 30px;
             border-radius: 24px;
-            transition: 0.4s ease;
             position: relative;
             overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
+        /* El brillo que sigue al mouse */
+        .card::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(
+                800px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), 
+                rgba(181, 153, 94, 0.15),
+                transparent 40%
+            );
+            z-index: 0;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .card:hover::before { opacity: 1; }
+        
         .card:hover {
-            background: rgba(35, 35, 35, 0.75);
             transform: translateY(-8px);
-            border-color: rgba(181, 153, 94, 0.5);
             box-shadow: 0 20px 40px 0 rgba(0, 0, 0, 0.8);
+            border-color: rgba(181, 153, 94, 0.5);
+        }
+
+        .card h3, .card p, .card-bg-icon {
+            position: relative;
+            z-index: 2;
+            pointer-events: none; /* Para que el mouseover detecte la tarjeta, no el texto */
         }
 
         .card h3 {
@@ -225,8 +300,6 @@
             color: var(--gold-metallic);
             margin-bottom: 12px;
             font-size: 1.3rem;
-            position: relative;
-            z-index: 2;
         }
 
         .card p { 
@@ -234,8 +307,6 @@
             color: var(--white-muted); 
             opacity: 0.8;
             line-height: 1.6;
-            position: relative;
-            z-index: 2;
         }
 
         .card-bg-icon {
@@ -245,6 +316,11 @@
             opacity: 0.05;
             color: var(--gold-metallic);
             z-index: 1;
+            transition: all 0.5s ease;
+        }
+        .card:hover .card-bg-icon {
+            transform: scale(1.2) rotate(-10deg);
+            opacity: 0.1;
         }
 
         /* -----------------------------------------------------------
@@ -328,7 +404,7 @@
             color: var(--text-grey);
             font-size: 2rem;
             line-height: 1;
-            cursor: pointer;
+            cursor: pointer; /* Excepción para el cursor aquí */
             transition: 0.3s;
         }
         .modal-close:hover { color: var(--gold-metallic); transform: rotate(90deg); }
@@ -354,7 +430,7 @@
         .modal-body strong { color: var(--gold-metallic); font-weight: 600; }
 
         /* -----------------------------------------------------------
-           NUEVO: WIDGET DE ESTADÍSTICAS Y LIKES
+           WIDGET DE ESTADÍSTICAS Y LIKES
         ----------------------------------------------------------- */
         .stats-float {
             position: fixed;
@@ -384,9 +460,7 @@
             transition: 0.3s;
         }
 
-        /* Botón Like Animado */
         .like-btn {
-            cursor: pointer;
             border: 1px solid rgba(181, 153, 94, 0.5);
             background: rgba(181, 153, 94, 0.1);
         }
@@ -398,7 +472,7 @@
         .like-btn:active { transform: scale(0.95); }
         
         .like-icon.liked {
-            color: #ff4d4d; /* Rojo al dar like */
+            color: #ff4d4d;
             animation: heartPop 0.4s ease;
         }
 
@@ -412,20 +486,24 @@
 </head>
 <body>
 
+    <div class="cursor-dot" id="cursor-dot"></div>
+    <div class="cursor-circle" id="cursor-circle"></div>
+    <div class="noise-overlay"></div>
+
     <div id="intro-screen"><div class="intro-text">IMPERIAL LEGION</div></div>
     
     <div id="webgl-canvas"></div>
 
     <nav>
-        <div class="nav-logo">
+        <div class="nav-logo hover-target">
             IMPERIAL <span>LEGION</span>
         </div>
-        <a href="https://wa.me/524273816560" style="color:var(--gold-metallic); text-decoration:none; font-size:1.5rem;">⚖️</a>
+        <a href="https://wa.me/524273816560" class="hover-target" style="color:var(--gold-metallic); text-decoration:none; font-size:1.5rem;">⚖️</a>
     </nav>
 
     <div class="container">
         
-        <section class="hero">
+        <section class="hero reveal">
             <div style="
                 width: 90px; height: 90px; 
                 margin-bottom: 25px; 
@@ -442,52 +520,52 @@
                 IMG
             </div>
 
-            <h1 class="fade-in">Justicia<br><span>Implacable & Solemne</span></h1>
+            <h1>Justicia<br><span>Implacable & Solemne</span></h1>
             <p style="color: #bbb; margin-bottom: 35px; max-width: 450px; line-height: 1.7; font-size: 1.05rem;">
                 "Defiende tu imperio, defiende tus derechos."<br>
                 Litigio estratégico de alto nivel con precisión absoluta.
             </p>
-            <a href="https://wa.me/524273816560" class="btn-gold">Consulta Privada</a>
+            <a href="https://wa.me/524273816560" class="btn-gold hover-target">Consulta Privada</a>
         </section>
 
-        <h2 class="section-title">Especialidades</h2>
+        <h2 class="section-title reveal">Especialidades</h2>
 
         <div class="grid-cards">
-            <div class="card">
+            <div class="card reveal hover-target">
                 <div class="card-bg-icon">⚔️</div>
                 <h3>Penal</h3>
                 <p>Defensa técnica rigurosa en juicios orales. Protegemos su libertad con la fuerza de la ley y una estrategia romana impenetrable.</p>
             </div>
             
-            <div class="card">
+            <div class="card reveal hover-target">
                 <div class="card-bg-icon">🏛️</div>
                 <h3>Civil</h3>
                 <p>Blindaje patrimonial y resolución de conflictos contractuales. Aseguramos la solidez de sus activos frente a cualquier adversidad.</p>
             </div>
             
-            <div class="card">
+            <div class="card reveal hover-target">
                 <div class="card-bg-icon">⚜️</div>
                 <h3>Familiar</h3>
                 <p>Discreción absoluta en divorcios y sucesiones complejas. Velamos por la estabilidad y el futuro de su linaje.</p>
             </div>
         </div>
 
-        <footer>
+        <footer class="reveal">
             <div style="margin-bottom: 15px; font-family: var(--font-title); color: var(--gold-metallic); letter-spacing: 2px;">IMPERIAL LEGION ABOGADOS</div>
             <p>© 2024. Todos los derechos reservados.</p>
             
             <div style="margin-top: 25px; border-top: 1px solid rgba(181, 153, 94, 0.2); padding-top: 15px; width: 60%; margin-left: auto; margin-right: auto;">
-                <a href="#" class="footer-link" onclick="openModal(event)">Términos y Condiciones de Uso</a>
+                <a href="#" class="footer-link hover-target" onclick="openModal(event)">Términos y Condiciones de Uso</a>
             </div>
         </footer>
     </div>
 
-    <div class="stats-float">
+    <div class="stats-float reveal">
         <div class="stat-badge" title="Visitas Totales">
             <span>👁️</span>
             <span id="visit-count">...</span>
         </div>
-        <div class="stat-badge like-btn" onclick="giveLike()">
+        <div class="stat-badge like-btn hover-target" onclick="giveLike()">
             <span class="like-icon" id="like-icon">❤️</span>
             <span>Dame Like</span>
             <span id="like-count" style="margin-left:5px; border-left:1px solid rgba(181,153,94,0.3); padding-left:8px;">...</span>
@@ -496,16 +574,75 @@
 
     <div id="terms-modal" class="modal-overlay">
         <div class="modal-content">
-            <button class="modal-close" onclick="closeModal()">×</button>
+            <button class="modal-close hover-target" onclick="closeModal()">×</button>
             <h2 class="modal-title">Términos y Condiciones</h2>
             <div class="modal-body">
                 <p><strong>1. Aceptación de los Términos:</strong> Al acceder y utilizar este sitio web...</p>
-                <p>... (Resto del contenido legal igual) ...</p>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
             </div>
         </div>
     </div>
 
     <script>
+        // --- CONTROL DE CURSOR PERSONALIZADO ---
+        const cursorDot = document.getElementById('cursor-dot');
+        const cursorCircle = document.getElementById('cursor-circle');
+        let mouseX = 0, mouseY = 0;
+        let cursorX = 0, cursorY = 0;
+
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            
+            // Punto central (instantáneo)
+            cursorDot.style.left = mouseX + 'px';
+            cursorDot.style.top = mouseY + 'px';
+        });
+
+        // Loop para el círculo con delay (suavidad)
+        function animateCursor() {
+            let distX = mouseX - cursorX;
+            let distY = mouseY - cursorY;
+            
+            cursorX += distX * 0.15;
+            cursorY += distY * 0.15;
+            
+            cursorCircle.style.left = cursorX + 'px';
+            cursorCircle.style.top = cursorY + 'px';
+            
+            requestAnimationFrame(animateCursor);
+        }
+        animateCursor();
+
+        // Efecto hover en elementos interactivos
+        document.querySelectorAll('a, button, .hover-target, .card').forEach(el => {
+            el.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
+            el.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
+        });
+
+        // --- EFECTO SPOTLIGHT EN TARJETAS ---
+        document.querySelectorAll('.card').forEach(card => {
+            card.addEventListener('mousemove', e => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                card.style.setProperty('--mouse-x', `${x}px`);
+                card.style.setProperty('--mouse-y', `${y}px`);
+            });
+        });
+
+        // --- SCROLL REVEAL (Intersection Observer) ---
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+
         // --- CONTROL DE MODAL (Términos) ---
         function openModal(e) {
             e.preventDefault();
@@ -532,74 +669,53 @@
         window.addEventListener('load', () => {
             setTimeout(() => { document.getElementById('intro-screen').style.opacity = '0'; }, 1000);
             setTimeout(() => { document.getElementById('intro-screen').style.display = 'none'; }, 2500);
+            document.querySelectorAll('.hero.reveal').forEach(el => el.classList.add('active'));
         });
 
-        // --- SISTEMA DE LIKES Y VISITAS (NUEVA API: counterapi.dev) ---
-        
-        // Usamos un nombre único para que no se mezcle con otros sitios
+        // --- SISTEMA DE LIKES Y VISITAS ---
         const namespace = 'imperial-legion-mx-legal'; 
         const keyVisits = 'visitas_totales';
         const keyLikes = 'likes_totales';
 
-        // Función auxiliar para manejar la respuesta de la API
         const handleResponse = (response) => {
             if (!response.ok) throw new Error('Network response was not ok');
             return response.json();
         };
 
-        // 1. VISITAS: Se incrementa automáticamente al cargar (/up)
         fetch(`https://api.counterapi.dev/v1/${namespace}/${keyVisits}/up`)
             .then(handleResponse)
-            .then(data => {
-                document.getElementById('visit-count').innerText = data.count;
-            })
-            .catch(err => {
-                console.error("Error Visitas:", err);
-                document.getElementById('visit-count').innerText = "1"; // Fallback visual
-            });
+            .then(data => { document.getElementById('visit-count').innerText = data.count; })
+            .catch(err => { document.getElementById('visit-count').innerText = "1"; });
 
-        // 2. LIKES (CARGA INICIAL): Solo leemos el valor actual (sin /up)
         fetch(`https://api.counterapi.dev/v1/${namespace}/${keyLikes}`)
             .then(handleResponse)
-            .then(data => {
-                document.getElementById('like-count').innerText = data.count;
-            })
-            .catch(err => {
-                // Si es la primera vez que se crea, puede dar error 404, mostramos 0
-                console.log("Aun no hay likes o error:", err);
-                document.getElementById('like-count').innerText = "0";
-            });
+            .then(data => { document.getElementById('like-count').innerText = data.count; })
+            .catch(err => { document.getElementById('like-count').innerText = "0"; });
 
-        // 3. LIKES (AL DAR CLIC): Incrementamos (/up)
         function giveLike() {
-            // Protección simple para no spamear clicks infinitos en la misma sesión
             if(sessionStorage.getItem('voted_imperial')) {
                 alert("Ya has dado tu voto de confianza hoy.");
                 return;
             }
-
-            // Animación visual inmediata (para que se sienta rápido)
             const icon = document.getElementById('like-icon');
             const countSpan = document.getElementById('like-count');
             icon.classList.add('liked');
 
-            // Llamada a la API
             fetch(`https://api.counterapi.dev/v1/${namespace}/${keyLikes}/up`)
                 .then(handleResponse)
                 .then(data => {
                     countSpan.innerText = data.count;
-                    sessionStorage.setItem('voted_imperial', 'true'); // Bloqueamos más votos en esta sesión
+                    sessionStorage.setItem('voted_imperial', 'true');
                 })
-                .catch(err => {
-                    console.error("Error dando like:", err);
-                    alert("Error de conexión al registrar el like.");
-                });
+                .catch(err => alert("Error de conexión."));
         }
 
 
-        // --- THREE.JS (ESCENA 3D - SIN CAMBIOS) ---
+        // --- THREE.JS (ESCENA 3D MEJORADA CON PARTÍCULAS E INTERACCIÓN) ---
         const container = document.getElementById('webgl-canvas');
         const scene = new THREE.Scene();
+        // Niebla suave para fundir el fondo
+        scene.fog = new THREE.FogExp2(0x000000, 0.03); 
         
         const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 100);
         camera.position.z = 18;
@@ -612,6 +728,7 @@
         renderer.shadowMap.type = THREE.PCFSoftShadowMap;
         container.appendChild(renderer.domElement);
 
+        // MATERIALES
         const goldMaterial = new THREE.MeshStandardMaterial({
             color: 0xC5A059, 
             metalness: 0.85,  
@@ -624,9 +741,14 @@
             roughness: 0.7
         });
 
+        // GRUPOS
+        const mainGroup = new THREE.Group();
+        scene.add(mainGroup);
+        
         const scalesGroup = new THREE.Group();
-        scene.add(scalesGroup);
+        mainGroup.add(scalesGroup);
 
+        // BALANZA
         const base = new THREE.Mesh(new THREE.CylinderGeometry(2, 2.2, 0.5, 32), darkMetalMaterial);
         base.position.y = -6;
         base.receiveShadow = true;
@@ -668,6 +790,7 @@
         beamGroup.add(leftPlate);
         beamGroup.add(rightPlate);
 
+        // ILUMINACIÓN
         const ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
         scene.add(ambientLight);
 
@@ -681,14 +804,37 @@
         rimLight.position.set(-10, 5, -5);
         scene.add(rimLight);
 
+        // NUEVO: SISTEMA DE PARTÍCULAS (POLVO DE ORO)
+        const particlesGeometry = new THREE.BufferGeometry();
+        const particlesCount = 350;
+        const posArray = new Float32Array(particlesCount * 3);
+
+        for(let i = 0; i < particlesCount * 3; i++) {
+            // Posiciones aleatorias en un espacio amplio
+            posArray[i] = (Math.random() - 0.5) * 35;
+        }
+        particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+
+        const particlesMaterial = new THREE.PointsMaterial({
+            size: 0.05,
+            color: 0xC5A059,
+            transparent: true,
+            opacity: 0.8,
+            blending: THREE.AdditiveBlending
+        });
+
+        const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
+        scene.add(particlesMesh);
+
+        // RESPONSIVE LAYOUT
         function updateLayout() {
             if(window.innerWidth > 768) {
-                scalesGroup.position.x = 6; 
-                scalesGroup.scale.set(1, 1, 1);
+                mainGroup.position.x = 6; 
+                mainGroup.scale.set(1, 1, 1);
             } else {
-                scalesGroup.position.x = 0; 
-                scalesGroup.position.y = -1.5; 
-                scalesGroup.scale.set(0.75, 0.75, 0.75);
+                mainGroup.position.x = 0; 
+                mainGroup.position.y = -1.5; 
+                mainGroup.scale.set(0.75, 0.75, 0.75);
             }
         }
         updateLayout();
@@ -700,18 +846,40 @@
             updateLayout();
         });
 
+        // ANIMACIÓN E INTERACCIÓN MOUSE 3D
+        let targetX = 0;
+        let targetY = 0;
+        const windowHalfX = window.innerWidth / 2;
+        const windowHalfY = window.innerHeight / 2;
+
+        document.addEventListener('mousemove', (event) => {
+            targetX = (event.clientX - windowHalfX) * 0.001;
+            targetY = (event.clientY - windowHalfY) * 0.001;
+        });
+
         const clock = new THREE.Clock();
+        
         function animate() {
             requestAnimationFrame(animate);
             const time = clock.getElapsedTime();
+
+            // Movimiento suave de la balanza
             scalesGroup.rotation.y = Math.sin(time * 0.2) * 0.15;
             beamGroup.rotation.z = Math.sin(time * 0.8) * 0.1;
             leftPlate.rotation.z = -beamGroup.rotation.z;
             rightPlate.rotation.z = -beamGroup.rotation.z;
+
+            // Animación de partículas
+            particlesMesh.rotation.y = time * 0.05;
+            particlesMesh.rotation.x = time * 0.02;
+
+            // Parallax Interactivo (Movimiento sutil basado en el mouse)
+            mainGroup.rotation.y += (targetX - mainGroup.rotation.y) * 0.05;
+            mainGroup.rotation.x += (targetY - mainGroup.rotation.x) * 0.05;
+
             renderer.render(scene, camera);
         }
         animate();
     </script>
 </body>
 </html>
-
