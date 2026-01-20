@@ -31,7 +31,7 @@
             --font-body: 'Montserrat', sans-serif;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; cursor: none; /* Ocultamos cursor default */ }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             background-color: var(--black-void);
@@ -41,7 +41,7 @@
             width: 100vw;
         }
 
-        /* EFECTO DE RUIDO (FILM GRAIN) - TEXTURA CINEMATOGRÁFICA */
+        /* EFECTO DE RUIDO (FILM GRAIN) */
         .noise-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -49,34 +49,6 @@
             z-index: 9000;
             opacity: 0.05;
             background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MDAiIGhlaWdodD0iNTAwIj48ZmlsdGVyIGlkPSJnoiPjxmZVR1cmJ1bGVuY2UgdHlwZT0iZnJhY3RhbE5vaXNlIiBiYXNlRnJlcXVlbmN5PSIwLjY1IiBudW1PY3RhdmVzPSIzIiBzdGl0Y2hUaWxlcz0ic3RpdGNoIi8+PC9maWx0ZXI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsdGVyPSJ1cmwoI2cpIiBvcGFjaXR5PSIwLjUiLz48L3N2Zz4=');
-        }
-
-        /* -----------------------------------------------------------
-           CURSOR PERSONALIZADO
-        ----------------------------------------------------------- */
-        .cursor-dot, .cursor-circle {
-            position: fixed;
-            top: 0; left: 0;
-            transform: translate(-50%, -50%);
-            border-radius: 50%;
-            z-index: 10000;
-            pointer-events: none;
-        }
-        .cursor-dot {
-            width: 8px; height: 8px;
-            background-color: var(--gold-metallic);
-        }
-        .cursor-circle {
-            width: 40px; height: 40px;
-            border: 1px solid rgba(181, 153, 94, 0.5);
-            transition: width 0.3s, height 0.3s, background-color 0.3s;
-        }
-        /* Estado Hover del cursor */
-        body.hovering .cursor-circle {
-            width: 60px; height: 60px;
-            background-color: rgba(181, 153, 94, 0.1);
-            border-color: var(--gold-metallic);
-            mix-blend-mode: screen;
         }
 
         /* -----------------------------------------------------------
@@ -130,7 +102,7 @@
             justify-content: space-between;
             align-items: center;
             z-index: 100;
-            background: rgba(5, 5, 5, 0.7);
+            background: rgba(5, 5, 5, 0.85); /* Un poco más oscuro en móvil para legibilidad */
             backdrop-filter: var(--liquid-blur);
             -webkit-backdrop-filter: var(--liquid-blur);
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
@@ -178,12 +150,22 @@
             flex-direction: column;
             justify-content: center;
             align-items: flex-start;
-            padding-top: 60px;
+            padding-top: 80px; /* Más padding superior para móviles */
         }
 
+        /* AJUSTES MÓVILES OPTIMIZADOS */
         @media (max-width: 768px) {
-            .hero { align-items: center; text-align: center; }
-            h1 { font-size: 2.5rem !important; }
+            .hero { 
+                align-items: center; 
+                text-align: center; 
+                padding-top: 100px; 
+                padding-bottom: 50px;
+            }
+            h1 { 
+                font-size: 2.2rem !important; /* Fuente ligeramente más pequeña para evitar cortes */
+            }
+            .nav-logo { font-size: 1rem; }
+            .section-title { font-size: 1.8rem; margin-top: 3rem; }
         }
 
         h1 {
@@ -196,6 +178,19 @@
             text-shadow: 0 10px 30px rgba(0,0,0,0.8);
         }
         h1 span { color: var(--gold-metallic); display: block; font-size: 0.6em; margin-top: 10px; }
+
+        /* ESTILOS DE LA IMAGEN LOGO */
+        .logo-hero {
+            width: 90px; 
+            height: 90px; 
+            margin-bottom: 25px; 
+            border-radius: 24px;
+            border: 1px solid rgba(181, 153, 94, 0.2);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            object-fit: contain; /* Asegura que la imagen no se deforme */
+            background: rgba(255,255,255,0.03); /* Fondo sutil si es PNG transparente */
+            backdrop-filter: blur(5px);
+        }
 
         /* Botón */
         .btn-gold {
@@ -463,6 +458,7 @@
         .like-btn {
             border: 1px solid rgba(181, 153, 94, 0.5);
             background: rgba(181, 153, 94, 0.1);
+            cursor: pointer;
         }
         .like-btn:hover {
             background: rgba(181, 153, 94, 0.2);
@@ -486,8 +482,6 @@
 </head>
 <body>
 
-    <div class="cursor-dot" id="cursor-dot"></div>
-    <div class="cursor-circle" id="cursor-circle"></div>
     <div class="noise-overlay"></div>
 
     <div id="intro-screen"><div class="intro-text">IMPERIAL LEGION</div></div>
@@ -495,55 +489,41 @@
     <div id="webgl-canvas"></div>
 
     <nav>
-        <div class="nav-logo hover-target">
+        <div class="nav-logo">
             IMPERIAL <span>LEGION</span>
         </div>
-        <a href="https://wa.me/524273816560" class="hover-target" style="color:var(--gold-metallic); text-decoration:none; font-size:1.5rem;">⚖️</a>
+        <a href="https://wa.me/524273816560" style="color:var(--gold-metallic); text-decoration:none; font-size:1.5rem;">⚖️</a>
     </nav>
 
     <div class="container">
         
         <section class="hero reveal">
-            <div style="
-                width: 90px; height: 90px; 
-                margin-bottom: 25px; 
-                display:flex; align-items:center; justify-content:center; 
-                border-radius:24px; 
-                color: var(--gold-metallic); 
-                font-size: 0.8rem;
-                background: rgba(255,255,255,0.03);
-                border: 1px solid rgba(181, 153, 94, 0.2);
-                border-top: 1px solid rgba(181, 153, 94, 0.4);
-                backdrop-filter: blur(15px);
-                box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            ">
-                IMG
-            </div>
+            <img src="1.png" alt="Logo Imperial" class="logo-hero">
 
             <h1>Justicia<br><span>Implacable & Solemne</span></h1>
             <p style="color: #bbb; margin-bottom: 35px; max-width: 450px; line-height: 1.7; font-size: 1.05rem;">
                 "Defiende tu imperio, defiende tus derechos."<br>
                 Litigio estratégico de alto nivel con precisión absoluta.
             </p>
-            <a href="https://wa.me/524273816560" class="btn-gold hover-target">Consulta Privada</a>
+            <a href="https://wa.me/524273816560" class="btn-gold">Consulta Privada</a>
         </section>
 
         <h2 class="section-title reveal">Especialidades</h2>
 
         <div class="grid-cards">
-            <div class="card reveal hover-target">
+            <div class="card reveal">
                 <div class="card-bg-icon">⚔️</div>
                 <h3>Penal</h3>
                 <p>Defensa técnica rigurosa en juicios orales. Protegemos su libertad con la fuerza de la ley y una estrategia romana impenetrable.</p>
             </div>
             
-            <div class="card reveal hover-target">
+            <div class="card reveal">
                 <div class="card-bg-icon">🏛️</div>
                 <h3>Civil</h3>
                 <p>Blindaje patrimonial y resolución de conflictos contractuales. Aseguramos la solidez de sus activos frente a cualquier adversidad.</p>
             </div>
             
-            <div class="card reveal hover-target">
+            <div class="card reveal">
                 <div class="card-bg-icon">⚜️</div>
                 <h3>Familiar</h3>
                 <p>Discreción absoluta en divorcios y sucesiones complejas. Velamos por la estabilidad y el futuro de su linaje.</p>
@@ -555,7 +535,7 @@
             <p>© 2024. Todos los derechos reservados.</p>
             
             <div style="margin-top: 25px; border-top: 1px solid rgba(181, 153, 94, 0.2); padding-top: 15px; width: 60%; margin-left: auto; margin-right: auto;">
-                <a href="#" class="footer-link hover-target" onclick="openModal(event)">Términos y Condiciones de Uso</a>
+                <a href="#" class="footer-link" onclick="openModal(event)">Términos y Condiciones de Uso</a>
             </div>
         </footer>
     </div>
@@ -565,7 +545,7 @@
             <span>👁️</span>
             <span id="visit-count">...</span>
         </div>
-        <div class="stat-badge like-btn hover-target" onclick="giveLike()">
+        <div class="stat-badge like-btn" onclick="giveLike()">
             <span class="like-icon" id="like-icon">❤️</span>
             <span>Dame Like</span>
             <span id="like-count" style="margin-left:5px; border-left:1px solid rgba(181,153,94,0.3); padding-left:8px;">...</span>
@@ -574,7 +554,7 @@
 
     <div id="terms-modal" class="modal-overlay">
         <div class="modal-content">
-            <button class="modal-close hover-target" onclick="closeModal()">×</button>
+            <button class="modal-close" onclick="closeModal()">×</button>
             <h2 class="modal-title">Términos y Condiciones</h2>
             <div class="modal-body">
                 <p><strong>1. Aceptación de los Términos:</strong> Al acceder y utilizar este sitio web...</p>
@@ -584,43 +564,7 @@
     </div>
 
     <script>
-        // --- CONTROL DE CURSOR PERSONALIZADO ---
-        const cursorDot = document.getElementById('cursor-dot');
-        const cursorCircle = document.getElementById('cursor-circle');
-        let mouseX = 0, mouseY = 0;
-        let cursorX = 0, cursorY = 0;
-
-        document.addEventListener('mousemove', (e) => {
-            mouseX = e.clientX;
-            mouseY = e.clientY;
-            
-            // Punto central (instantáneo)
-            cursorDot.style.left = mouseX + 'px';
-            cursorDot.style.top = mouseY + 'px';
-        });
-
-        // Loop para el círculo con delay (suavidad)
-        function animateCursor() {
-            let distX = mouseX - cursorX;
-            let distY = mouseY - cursorY;
-            
-            cursorX += distX * 0.15;
-            cursorY += distY * 0.15;
-            
-            cursorCircle.style.left = cursorX + 'px';
-            cursorCircle.style.top = cursorY + 'px';
-            
-            requestAnimationFrame(animateCursor);
-        }
-        animateCursor();
-
-        // Efecto hover en elementos interactivos
-        document.querySelectorAll('a, button, .hover-target, .card').forEach(el => {
-            el.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
-            el.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
-        });
-
-        // --- EFECTO SPOTLIGHT EN TARJETAS ---
+        // --- EFECTO SPOTLIGHT EN TARJETAS (JS Nativo Optimizado) ---
         document.querySelectorAll('.card').forEach(card => {
             card.addEventListener('mousemove', e => {
                 const rect = card.getBoundingClientRect();
@@ -711,7 +655,7 @@
         }
 
 
-        // --- THREE.JS (ESCENA 3D ESTÁTICA - SOLO MOVIMIENTO INTERNO) ---
+        // --- THREE.JS (ESCENA 3D) ---
         const container = document.getElementById('webgl-canvas');
         const scene = new THREE.Scene();
         // Niebla suave
@@ -825,15 +769,17 @@
         const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
         scene.add(particlesMesh);
 
-        // RESPONSIVE LAYOUT
+        // RESPONSIVE LAYOUT (Optimizado para móvil)
         function updateLayout() {
             if(window.innerWidth > 768) {
+                // Desktop
                 mainGroup.position.x = 6; 
                 mainGroup.scale.set(1, 1, 1);
             } else {
+                // Móvil
                 mainGroup.position.x = 0; 
-                mainGroup.position.y = -1.5; 
-                mainGroup.scale.set(0.75, 0.75, 0.75);
+                mainGroup.position.y = -1.0; /* Subimos un poco el modelo para que se vea mejor */
+                mainGroup.scale.set(0.65, 0.65, 0.65); /* Un poco más pequeño para no competir con el texto */
             }
         }
         updateLayout();
@@ -845,24 +791,20 @@
             updateLayout();
         });
 
-        // ANIMACIÓN: BALANZA ESTABILIZADA
+        // ANIMACIÓN
         const clock = new THREE.Clock();
         
         function animate() {
             requestAnimationFrame(animate);
             const time = clock.getElapsedTime();
 
-            // Mantenemos solo el balanceo interno original
             scalesGroup.rotation.y = Math.sin(time * 0.2) * 0.15;
             beamGroup.rotation.z = Math.sin(time * 0.8) * 0.1;
             leftPlate.rotation.z = -beamGroup.rotation.z;
             rightPlate.rotation.z = -beamGroup.rotation.z;
 
-            // Las partículas siguen rotando suavemente alrededor
             particlesMesh.rotation.y = time * 0.05;
             particlesMesh.rotation.x = time * 0.02;
-
-            // ELIMINADO: Movimiento de la cámara/grupo según el mouse (Parallax)
 
             renderer.render(scene, camera);
         }
